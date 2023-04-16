@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { getAuth, signInWithEmailAndPassword, onAuthStateChanged} = require('firebase/auth');
+const { getAuth, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup} = require('firebase/auth');
 const prepend = require('prepend');
 const sanitizeHtml = require('sanitize-html');
 
@@ -13,6 +13,17 @@ exports.loginget = (req, res) => {
     } else {
       return res.redirect("./")
     }
+  })
+}
+
+exports.loginpostgoogle = (req, res) => {
+  const signInWithGoogle = () => {
+    const provider = GoogleAuthProvider(auth);
+    signInWithPopup(auth, provider);
+  }
+  signInWithGoogle()
+  .then((userCredential) => {
+    res.send("logged in successfully with google"+userCredential.email)
   })
 }
 
@@ -61,4 +72,5 @@ exports.loginpost = (req, res) => {
       });
       res.status(500).send('Error logging in:' + err);
     });
+
 };
